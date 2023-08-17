@@ -1,23 +1,36 @@
 <?php
 
-class SomeObject {
-    protected $name;
+class SomeObject
+{
+    public function __construct(
+        private readonly string $name
+    ){}
 
-    public function __construct(string $name) { }
+    public function getObjectName(): string
+    {
+        return $this->name;
+    }
 
-    public function getObjectName() { }
+    public function getHandlerName(): string
+    {
+        return 'handle_' . $this->name;
+    }
 }
 
-class SomeObjectsHandler {
-    public function __construct() { }
-
-    public function handleObjects(array $objects): array {
+class SomeObjectsHandler
+{
+    /**
+     * @param SomeObject[] $objects
+     * @return array
+     */
+    public function handleObjects(array $objects): array
+    {
         $handlers = [];
+
         foreach ($objects as $object) {
-            if ($object->getObjectName() == 'object_1')
-                $handlers[] = 'handle_object_1';
-            if ($object->getObjectName() == 'object_2')
-                $handlers[] = 'handle_object_2';
+            if ($object instanceof SomeObject) {
+                $handlers[] = $object->getHandlerName();
+            }
         }
 
         return $handlers;
@@ -31,3 +44,5 @@ $objects = [
 
 $soh = new SomeObjectsHandler();
 $soh->handleObjects($objects);
+
+//var_dump($soh->handleObjects($objects));

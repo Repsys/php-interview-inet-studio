@@ -1,17 +1,40 @@
 <?php
 
-class XMLHttpService extends XMLHTTPRequestService {}
+enum HttpMethod: string
+{
+    case GET = 'GET';
+    case POST = 'POST';
+    case PUT = 'PUT';
+    case DELETE = 'DELETE';
+    // TODO
+}
 
-class Http {
-    private $service;
+interface HttpServiceInterface
+{
+    public function request(string $url, HttpMethod $method, array $options = []);
+}
 
-    public function __construct(XMLHttpService $xmlHttpService) { }
+class XMLHttpService implements HttpServiceInterface
+{
+    public function request(string $url, HttpMethod $method, array $options = [])
+    {
+        // TODO: Implement request() method.
+    }
+}
 
-    public function get(string $url, array $options) {
-        $this->service->request($url, 'GET', $options);
+class Http
+{
+    public function __construct(
+        private readonly HttpServiceInterface $service
+    ){}
+
+    public function get(string $url, array $options): void
+    {
+        $this->service->request($url, HttpMethod::GET, $options);
     }
 
-    public function post(string $url) {
-        $this->service->request($url, 'GET');
+    public function post(string $url): void
+    {
+        $this->service->request($url, HttpMethod::POST);
     }
 }
